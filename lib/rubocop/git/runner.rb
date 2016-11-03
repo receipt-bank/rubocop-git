@@ -55,7 +55,7 @@ module RuboCop
         violations.map do |violation|
           formatter.file_finished(
             violation.filename,
-            violation.offenses.compact.sort.freeze
+            violation.offenses.compact.reject(&:disabled?).sort.freeze
           )
         end
 
