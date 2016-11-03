@@ -36,8 +36,14 @@ module RuboCop
         args = %w(diff --diff-filter=AMCR --find-renames --find-copies)
 
         args << '--cached' if options.cached
-        args << options.commit_first.shellescape if options.commit_first
-        args << options.commit_last.shellescape if options.commit_last
+        if options.file
+          args << (options.commit_first ? options.commit_first.shellescape : 'master')
+          args << "--"
+          args << options.file
+        else
+          args << options.commit_first.shellescape if options.commit_first
+          args << options.commit_last.shellescape if options.commit_last
+        end
 
         `git #{args.join(' ')}`
       end
