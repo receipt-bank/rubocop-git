@@ -43,6 +43,10 @@ module RuboCop
             @options.file = file
           end
 
+          opt.on('--format FORMAT', 'The rubocop to output in') do |format|
+            @options.format = format
+          end
+
           opt.on('-D', '--display-cop-names',
                  'Display cop names in offense messages') do
             @options.rubocop[:display_cop_names] = true

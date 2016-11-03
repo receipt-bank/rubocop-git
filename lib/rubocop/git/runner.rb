@@ -49,7 +49,7 @@ module RuboCop
       end
 
       def display_violations(io)
-        formatter = RuboCop::Formatter::ClangStyleFormatter.new(io)
+        formatter = rubocop_formatter.new(io)
         formatter.started(nil)
 
         violations.map do |violation|
@@ -60,6 +60,17 @@ module RuboCop
         end
 
         formatter.finished(@files.map(&:filename).freeze)
+      end
+
+      def rubocop_formatter
+        if @options.format
+          formatter = RuboCop::Formatter.constants.detect { |c|
+            c.to_s.match /#{@options.format}/i
+          }
+          RuboCop::Formatter.const_get formatter
+        else
+          RuboCop::Formatter::ClangStyleFormatter
+        end
       end
     end
   end

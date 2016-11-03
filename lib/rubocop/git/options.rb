@@ -6,7 +6,7 @@ module RuboCop
       HOUND_DEFAULT_CONFIG_FILE =
         File.expand_path('../../../../hound.yml', __FILE__)
 
-      attr_accessor :config, :file
+      attr_accessor :config, :file, :format
       attr_reader   :cached, :hound, :rubocop
 
       def initialize(hash_options = nil)
