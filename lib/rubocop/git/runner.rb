@@ -33,27 +33,44 @@ module RuboCop
       end
 
       def git_diff(options)
-        args = %w(diff --diff-filter=AMCR --find-renames --find-copies)
+        args = %w(-c diff.mnemonicprefix=false diff --no-color --diff-filter=AMCR --find-renames --find-copies)
 
         args << '--cached' if options.cached
-        args << options.commit_first.shellescape if options.commit_first
-        args << options.commit_last.shellescape if options.commit_last
+        if options.file
+          args << (options.commit_first ? options.commit_first.shellescape : 'master')
+          args << "--"
+          args << options.file
+        else
+          args << options.commit_first.shellescape if options.commit_first
+          args << options.commit_last.shellescape if options.commit_last
+        end
 
         `git #{args.join(' ')}`
       end
 
       def display_violations(io)
-        formatter = RuboCop::Formatter::ClangStyleFormatter.new(io)
+        formatter = rubocop_formatter.new(io)
         formatter.started(nil)
 
         violations.map do |violation|
           formatter.file_finished(
             violation.filename,
-            violation.offenses.compact.sort.freeze
+            violation.offenses.compact.reject(&:disabled?).sort.freeze
           )
         end
 
         formatter.finished(@files.map(&:filename).freeze)
+      end
+
+      def rubocop_formatter
+        if @options.format
+          formatter = RuboCop::Formatter.constants.detect { |c|
+            c.to_s.match /#{@options.format}/i
+          }
+          RuboCop::Formatter.const_get formatter
+        else
+          RuboCop::Formatter::ClangStyleFormatter
+        end
       end
     end
   end
