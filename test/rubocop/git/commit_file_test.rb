@@ -4,40 +4,36 @@ require 'rubocop/git/commit_file'
 describe RuboCop::Git::CommitFile do
   describe 'ruby files check' do
     it 'returns true for .rb files' do
-      assert ruby_commit_file('filename.rb')
+      assert ruby_commit_file?('filename.rb')
     end
 
     it 'returns true for .rake files' do
-      assert ruby_commit_file('filename.rake')
+      assert ruby_commit_file?('filename.rake')
     end
 
     it 'returns true for Gemfile' do
-      assert ruby_commit_file('Gemfile')
+      assert ruby_commit_file?('Gemfile')
     end
 
     it 'returns true for Rakefile' do
-      assert ruby_commit_file('Rakefile')
+      assert ruby_commit_file?('Rakefile')
     end
 
     it 'returns true for Guardfile' do
-      assert ruby_commit_file('Guardfile')
+      assert ruby_commit_file?('Guardfile')
     end
 
     it 'returns true for Procfile' do
-      assert ruby_commit_file('Procfile')
+      assert ruby_commit_file?('Procfile')
     end
 
     it 'returns nil for Gemfile.lock' do
-      assert_nil ruby_commit_file('Gemfile.lock')
+      assert_nil ruby_commit_file?('Gemfile.lock')
     end
   end
 
-  def double(*args)
-    OpenStruct.new(*args)
-  end
-
-  def ruby_commit_file(filename)
-    file = double filename: filename
+  def ruby_commit_file?(filename)
+    file = OpenStruct.new filename: filename
 
     RuboCop::Git::CommitFile.new(file, nil).ruby?
   end
