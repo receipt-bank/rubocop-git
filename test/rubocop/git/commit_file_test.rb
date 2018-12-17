@@ -28,7 +28,7 @@ describe RuboCop::Git::CommitFile do
     end
 
     it 'returns false for Gemfile.lock' do
-      ruby_commit_file?('Gemfile.lock').must_equal false
+      refute ruby_commit_file?('Gemfile.lock')
     end
   end
 
