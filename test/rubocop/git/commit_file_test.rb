@@ -27,8 +27,8 @@ describe RuboCop::Git::CommitFile do
       assert ruby_commit_file?('Procfile')
     end
 
-    it 'returns nil for Gemfile.lock' do
-      assert_nil ruby_commit_file?('Gemfile.lock')
+    it 'returns false for Gemfile.lock' do
+      ruby_commit_file?('Gemfile.lock').must_equal false
     end
   end
 

@@ -1,8 +1,7 @@
 module RuboCop::Git
 # copy from https://github.com/thoughtbot/hound/blob/d2f3933/app/models/commit_file.rb
 class CommitFile
-  RUBY_EXT = %w(rb rake)
-  RUBY_FILES = %w(Gemfile Rakefile Procfile Guardfile)
+  KNOWN_RUBY_FILES = %w(Gemfile Rakefile Procfile Guardfile)
 
   def initialize(file, commit)
     @file = file
@@ -32,7 +31,7 @@ class CommitFile
   end
 
   def ruby?
-    filename.match(/.*\.(#{RUBY_EXT.join('|')})|#{RUBY_FILES.join('$|')}/)
+    filename.match(/.*\.(rb|rake)/) || KNOWN_RUBY_FILES.include?(filename)
   end
 
   def modified_lines
